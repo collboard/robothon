@@ -15,15 +15,18 @@
         "url": "https://github.com/collboard/robothon/issues"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "snowpack build"
     },
     "dependencies": {
-        "@collboard/modules-sdk": "^9.1.0-5",
+        "@collboard/modules-sdk": "^9.1.0-6",
         "mobx": "^6.0.4",
         "react": "^17.0.1",
         "xyzt": "4.4.2"
     },
     "devDependencies": {
-        "@types/react": "^17.0.0"
+        "@snowpack/plugin-webpack": "^2.3.0",
+        "@types/react": "^17.0.0",
+        "snowpack": "^3.0.11"
     }
 }

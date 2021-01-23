@@ -1,0 +1,21 @@
+// TODO: Maybe config
+export const functionBuilderColors = [
+    '#7df9ff',
+    '#ff003f',
+    '#0ff0fc',
+    '#21fc0d',
+    '#ccff00',
+    '#ff3503',
+    '#ff0490',
+    '#bf00ff',
+    '#e60000',
+    '#dd0044',
+    '#ff009f',
+    '#55ffff',
+    '#3f00ff',
+    '#fffc00',
+    '#ff073a',
+    '#ff9933',
+    '#04d9ff',
+    '#cfff04',
+];

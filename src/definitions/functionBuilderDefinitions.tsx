@@ -1,4 +1,4 @@
-import { FunctionBuilderFunction } from './interfaces/FunctionBuilderFunction';
+import { FunctionBuilderFunction } from '../interfaces/FunctionBuilderFunction';
 
 export const functionBuilderDefinitions: { [key: string]: FunctionBuilderFunction } = {
     x: {
@@ -6,6 +6,27 @@ export const functionBuilderDefinitions: { [key: string]: FunctionBuilderFunctio
         variables: {},
         func: (x, _args) => {
             return x;
+        },
+    },
+    c1: {
+        title: '1',
+        variables: {},
+        func: (x, _args) => {
+            return 1;
+        },
+    },
+    pi: {
+        title: 'π',
+        variables: {},
+        func: (x, _args) => {
+            return Math.PI;
+        },
+    },
+    e: {
+        title: 'e',
+        variables: {},
+        func: (x, _args) => {
+            return Math.E;
         },
     },
     sin: {

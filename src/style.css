@@ -73,21 +73,9 @@
     pointer-events: all;
 }
 
-.functionBuilderArt .connectionPoint {
+.functionBuilder-tool .functionBuilderArt .connectionPoint:hover {
+    border: solid 3px white;
     cursor: pointer;
-    position: relative;
-}
-
-.functionBuilderArt .connectionPoint:hover:after {
-    background: rgba(0, 0, 0, 0.25);
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    content: '';
-    border-radius: 100%;
 }
 
 .functionBuilderArt .connectionTitle {
@@ -109,4 +97,18 @@
 
 .textIcon.active {
     border-color: #4e4e4e;
+}
+
+/* Connection */
+.functionBuilderConnection {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.functionBuilderConnection * {
+    stroke-width: 3px;
+    stroke: black;
+    fill: none;
+    pointer-events: none;
 }

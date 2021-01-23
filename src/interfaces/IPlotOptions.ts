@@ -14,7 +14,7 @@ export interface IPlotObjects {
 }
 export interface IPlotOptions {
     canvas: HTMLCanvasElement;
-    func: (x: number) => number;
+    func: (x: number) => number | null;
     boundingBox: BoundingBox;
     objects?: IPlotObjects;
 }

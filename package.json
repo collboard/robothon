@@ -18,6 +18,9 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
-        "@collboard/modules-sdk": "^9.1.0-1"
+        "@collboard/modules-sdk": "^9.1.0-1",
+        "mobx": "^6.0.4",
+        "react": "^17.0.1",
+        "xyzt": "^4.7.0"
     }
 }

@@ -7,6 +7,7 @@ Projekt vytvořený na Robothonu 2021 jako **první externí modul** do [Collboa
 
 ## Vyzkoušejte na vlastní tabuli!
 
+https://collboard.com/​
 
 ![Vyzkoušejte na vlastní tabuli](https://user-images.githubusercontent.com/23721952/105579439-f0176d00-5d86-11eb-9223-00b7448431c6.gif)
 

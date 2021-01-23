@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "isolatedModules": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true
+    },
+    "include": ["src"]
+}

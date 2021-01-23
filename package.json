@@ -21,6 +21,9 @@
         "@collboard/modules-sdk": "^9.1.0-1",
         "mobx": "^6.0.4",
         "react": "^17.0.1",
-        "xyzt": "^4.7.0"
+        "xyzt": "4.4.2"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.0"
     }
 }

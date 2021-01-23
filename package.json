@@ -1,0 +1,20 @@
+{
+    "name": "robothon",
+    "version": "1.0.0",
+    "description": "Projekt vytvořený na Robothonu 2021jako první externí modul do Collboardu.",
+    "contributors": [
+        "Pavol Hejný <me@pavolhejny.com> (https://pavolhejny.com)",
+        "Jonáš Rosecký <jonas.rosecky@h-edu.cz>"
+    ],
+    "homepage": "https://github.com/collboard/robothon#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/collboard/robothon.git"
+    },
+    "bugs": {
+        "url": "https://github.com/collboard/robothon/issues"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
+}

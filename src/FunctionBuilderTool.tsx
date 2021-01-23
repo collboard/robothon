@@ -2,7 +2,7 @@ import { observable } from 'mobx';
 import * as React from 'react';
 import { Icon } from '../../30-components/menu/Icon';
 import { classNames } from '../../40-utils/classNames';
-import { AbstractToolPlugin } from '../../50-systems/PluginStore/AbstractToolPlugin';
+import { AbstractToolPlugin } from '@collboard/modules-sdk/typings/src/50-systems/PluginStore/AbstractToolPlugin'; //'../../50-systems/PluginStore/AbstractToolPlugin';
 import { Authors } from '../../50-systems/PluginStore/Authors';
 import { internalPlugin, inDevelopmentPublishedAsExperimental } from '../../50-systems/PluginStore/IPluginManifest';
 import { IIcon } from '../../50-systems/ToolbarSystem/IconsToolbar';

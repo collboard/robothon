@@ -21,6 +21,4 @@ https://collboard.com/8JmPkzKsDy2XWv6Hd
 
 ## TODOs
 
--   TODO: Bernie
--   TODO: Image screenshot
 -   TODO: Replace finally everything by @collboard/modules-sdk

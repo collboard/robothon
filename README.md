@@ -1,5 +1,4 @@
-# Robothon mathematical module
-
+# Collboard graph plotting module
 Project started at Robothon 2021 as a **first external module** for [Collboard.com](https://collboard.com/)
 
 ![Module showcase](https://user-images.githubusercontent.com/23721952/105996243-5d3e4180-60aa-11eb-8e8f-cf92729b1e8c.png)

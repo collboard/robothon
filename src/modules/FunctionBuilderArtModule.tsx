@@ -26,9 +26,6 @@ import { GraphStateHolder } from '../utils/GraphStateHolder';
 import { plot } from '../utils/plot';
 import { renderPath } from '../utils/renderPath';
 
-declareModule(() => makeArtModule({ name: 'FunctionBuilder', class: FunctionBuilderArt }));
-// Note: function form of internalModules.declareModule(()=> is here only tobe this on top of the file
-
 const StyledArt = styled.div`
     position: relative;
     border-radius: 10px;
@@ -453,3 +450,5 @@ export class FunctionBuilderArt extends Abstract2dArt {
         );
     }
 }
+
+declareModule(makeArtModule({ name: 'FunctionBuilder', class: FunctionBuilderArt }));

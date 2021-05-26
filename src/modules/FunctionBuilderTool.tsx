@@ -69,6 +69,7 @@ declareModule(() => {
             autoSelect: true,
 
             order: 61,
+            focusScope: 'tools',
 
             icon: 'group', // TODO
             boardCursor: 'default',
@@ -84,13 +85,14 @@ declareModule(() => {
 
                     {/* TODO: add icons */}
 
-                    {Object.keys(functionBuilderDefinitions).map((funct) => (
+                    {Object.keys(functionBuilderDefinitions).map((funct, i) => (
                         <StyledTextIcon
                             className={classNames(!state.manipulating && state.selectedFunction === funct && 'active')}
                             onClick={() => {
                                 state.selectedFunction = funct;
                                 state.manipulating = false;
                             }}
+                            key={i}
                         >
                             {functionBuilderFormatTitle(functionBuilderDefinitions[funct])}
                         </StyledTextIcon>

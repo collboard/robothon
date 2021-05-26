@@ -1,13 +1,15 @@
-import { SystemsContainer } from '../../../50-systems/SystemsContainer';
-import { AbstractArt } from '../../../71-arts/20-AbstractArt';
-import { FunctionBuilderArt } from '../modules/FunctionBuilderArtPlugin';
+/* tslint:disable */
+/* TODO: Enable TSLint */
+import { ISystems, AbstractArt } from '@collboard/modules-sdk';
+import { isFunctionBuilderFunction } from '../interfaces/FunctionBuilderFunction';
+import { FunctionBuilderArt } from '../modules/FunctionBuilderArtModule';
 
 // TODO: Probbably some better name like compose function
 export function evaluate(
     art: FunctionBuilderArt,
     x: number,
     seenNodes: string[], // TODO: What this param menas
-    systemsContainer: SystemsContainer,
+    systemsContainer: ISystems,
 ): number | null {
     if (seenNodes.includes(art.artId)) return null;
     if (!art.functionDefinition) return null;
@@ -19,7 +21,7 @@ export function evaluate(
             return;
         }
 
-        const foundArts = systemsContainer.artVersionSystem.materialArts.filter((art: AbstractArt) =>
+        const foundArts = systemsContainer.materialArtVersioningSystem.arts.filter((art: AbstractArt) =>
             art.connections ? art.artId === art.connections[key] : false,
         );
         if (foundArts.length === 0) {
@@ -44,5 +46,7 @@ export function evaluate(
 
     if (Object.values(variables).reduce((prev, curr) => prev || curr === null, false)) return null;
 
-    return art.functionDefinition.func(x, variables as { [key: string]: number });
+    return isFunctionBuilderFunction(art.functionDefinition)
+        ? art.functionDefinition.func(x, variables as { [key: string]: number })
+        : art.functionDefinition.constant;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { IVectorObject, Vector } from 'xyzt';
 
 const PADDING = 30;
@@ -33,6 +34,19 @@ function getPath(point1: IVectorObject, point2: IVectorObject) {
     ].join(' ');
 }
 
+const StyledConnection = styled.svg`
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+
+    * {
+        stroke-width: 3px;
+        stroke: black;
+        fill: none;
+        pointer-events: none;
+    }
+`;
+
 export function renderPath(
     point1: IVectorObject,
     point2: IVectorObject,
@@ -46,7 +60,7 @@ export function renderPath(
     const bottomRight = getBottomRightCorner(point1, point2);
 
     return (
-        <svg
+        <StyledConnection
             style={{
                 width: bottomRight.subtract(topLeft).x + 2 * PADDING,
                 height: bottomRight.subtract(topLeft).y + 2 * PADDING,
@@ -91,6 +105,6 @@ export function renderPath(
                         {label}
                     </text>
                 ))}
-        </svg>
+        </StyledConnection>
     );
 }

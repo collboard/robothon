@@ -1,254 +1,253 @@
+import {
+    declareModule,
+    Icon,
+    makeIconModuleOnModule,
+    ToolbarName,
+    classNames,
+    Registration,
+    selectionToolDraggingBehavior,
+    selectionToolSelectionBoxBehavior,
+} from '@collboard/modules-sdk';
 import { observable } from 'mobx';
 import * as React from 'react';
+import styled from 'styled-components';
 import { Vector } from 'xyzt';
-import { Icon } from '../../../30-components/menu/Icon';
-import { classNames } from '../../../40-utils/classNames';
-import { AbstractToolPlugin } from '../../../50-systems/PluginStore/AbstractToolPlugin';
-import { Authors } from '../../../50-systems/PluginStore/Authors';
-import { inDevelopmentPublishedAsExperimental, internalPlugin } from '../../../50-systems/PluginStore/IPluginManifest';
-import { SystemsContainer } from '../../../50-systems/SystemsContainer';
-import { IIcon } from '../../../50-systems/ToolbarSystem/IconsToolbar';
-import { AbstractTool } from '../../../72-tools/AbstractTool';
+import { Authors } from '../authors';
 import { functionBuilderDefinitions } from '../definitions/functionBuilderDefinitions';
 import { FunctionBuilderConnectionArt } from '../utils/FunctionBuilderConnectionArt';
 import { functionBuilderFormatTitle } from '../utils/functionBuilderFormatTitle';
 import { GraphStateHolder } from '../utils/GraphStateHolder';
-import { FunctionBuilderArt } from './FunctionBuilderArtPlugin';
+import { FunctionBuilderArt } from './FunctionBuilderArtModule';
 
+const StyledTextIcon = styled.div`
+    padding: 5px 10px;
+    margin: 5px 5px;
+    border: solid 2px rgba(0, 0, 0, 0);
+    border-radius: 5px;
+    font-size: 0.8em;
+    cursor: pointer;
+    white-space: nowrap;
 
-/**
- *
- * Note: In future this file will we in indipendent repository as external plugin.
- *
- */
+    &.active {
+        border-color: #4e4e4e;
+    }
+`;
 
-export class FunctionBuilderPlugin extends AbstractToolPlugin {
-    manifest = {
-        internalPlugin,
-        inDevelopmentPublishedAsExperimental,
-        name: 'FunctionBuilder',
-        title: { en: 'TODO: Function Builder', cs: 'TODO: Nástroj na konstrukci funkcí' },
-        description: {
+declareModule(() => {
+    const state: {
+        selectedFunction: string;
+        manipulating: boolean;
+    } = observable({
+        selectedFunction: Object.keys(functionBuilderDefinitions)[0],
+        manipulating: true,
+    });
+
+    async function activateSelectionTool() {
+        state.manipulating = true;
+    }
+
+    return makeIconModuleOnModule({
+        manifest: {
+            flags: ['development', 'experimental'],
+            name: 'FunctionBuilder',
+            title: { en: 'Function Builder', cs: 'Nástroj na konstrukci funkcí' },
+            /*description: {
             en: 'TODO',
             cs: 'TODO',
+        },*/
+            keywords: [],
+            categories: ['Math', 'Experimental' /* TODO: Probbably experimental should be flag or some dev stage */],
+            icon: '/assets/icons/group.svg', // TODO
+            screenshots: [
+                /*TODO:*/
+            ],
+            contributors: [Authors.rosecky, Authors.firchova, Authors.hejny],
         },
-        keywords: [],
-        categories: ['Math'],
-        icon: '/assets/icons/group.svg', // TODO
-        screenshots: [
-            /*TODO:*/
-        ],
-        contributors: [Authors.rosecky, Authors.hejny],
-        internalDependencies: ['SelectionTool'],
-    };
+        toolbar: ToolbarName.Tools,
+        icon: {
+            name: 'functionBuilder',
+            autoSelect: true,
 
-    icon: IIcon = {
-        name: 'functionBuilder',
-        order: 61,
-        section: 0,
-        icon: 'group', // TODO
-        boardCursor: 'default',
-        menu: () => (
-            <>
-                <Icon
-                    icon="cursor"
-                    active={this.manipulating}
-                    onClick={() => {
-                        this.manipulating = true;
-                    }}
-                />
+            order: 61,
 
-                {/* TODO: add icons */}
-
-                {Object.keys(functionBuilderDefinitions).map((funct) => (
-                    <div
-                        className={classNames(
-                            'textIcon',
-                            !this.manipulating && this.selectedFunction === funct && 'active',
-                        )}
+            icon: 'group', // TODO
+            boardCursor: 'default',
+            menu: () => (
+                <>
+                    <Icon
+                        icon="cursor"
+                        active={state.manipulating}
                         onClick={() => {
-                            this.selectedFunction = funct;
-                            this.manipulating = false;
+                            state.manipulating = true;
                         }}
-                    >
-                        {functionBuilderFormatTitle(functionBuilderDefinitions[funct])}
-                    </div>
-                ))}
-            </>
-        ),
-    };
+                    />
 
-    tool: FunctionBuilderTool = new FunctionBuilderTool(this);
+                    {/* TODO: add icons */}
 
-    @observable selectedFunction: string = Object.keys(functionBuilderDefinitions)[0];
+                    {Object.keys(functionBuilderDefinitions).map((funct) => (
+                        <StyledTextIcon
+                            className={classNames(!state.manipulating && state.selectedFunction === funct && 'active')}
+                            onClick={() => {
+                                state.selectedFunction = funct;
+                                state.manipulating = false;
+                            }}
+                        >
+                            {functionBuilderFormatTitle(functionBuilderDefinitions[funct])}
+                        </StyledTextIcon>
+                    ))}
+                </>
+            ),
+        },
+        moduleActivatedByIcon: {
+            setup: (systemsContainer) => {
+                const { touchController, virtualArtVersioningSystem, materialArtVersioningSystem, collSpace } =
+                    systemsContainer;
 
-    @observable manipulating: boolean = false;
-
-    async activateSelectionTool() {
-        this.manipulating = true;
-    }
-}
-
-class FunctionBuilderTool extends AbstractTool {
-    createSubscription() {
-        const plugin = this.plugin as FunctionBuilderPlugin;
-
-        return this.plugin.touchController.touches.subscribe(async (touch) => {
-            if (!this.plugin.amISelected) return;
-
-            if (plugin.manipulating) {
-                // Dragging new connection
-                const overOutputs = plugin.artVersionSystem.artsPlaced.filter(
-                    (art) => art instanceof FunctionBuilderArt && (art as FunctionBuilderArt).__mouseOverOutput,
-                );
-
-                if (overOutputs.length > 0) {
-                    const source = overOutputs[0] as FunctionBuilderArt;
-
-                    const arrow = new FunctionBuilderConnectionArt(
-                        source.getOutputPosition((this.plugin as any) as SystemsContainer),
-                        source.color,
-                    );
-
-                    plugin.artVersionSystem.registerVirtualArts(arrow);
-                    touch.frames.subscribe({
-                        next: (touchFrame) => {
-                            arrow.end = this.plugin.collSpace.pickPoint(touchFrame.position).point;
-                            plugin.artVersionSystem.updateVirtualArts(arrow);
-                        },
-                        complete: () => {
-                            const toUpdate = plugin.artVersionSystem.artsPlaced.filter(
+                return Registration.fromSubscription((registerAdditionalSubscription) =>
+                    touchController.touches.subscribe((touch) => {
+                        if (state.manipulating) {
+                            // Dragging new connection
+                            const overOutputs = materialArtVersioningSystem.artsPlaced.filter(
                                 (art) =>
                                     art instanceof FunctionBuilderArt &&
-                                    (art as FunctionBuilderArt).registerInputIfOver(source.artId),
+                                    (art as FunctionBuilderArt).__pointerOverOutput,
                             );
 
-                            plugin
-                                .createOperation('Connection updated')
-                                .takeArts(...toUpdate)
-                                .update(...toUpdate)
-                                .persist();
+                            if (overOutputs.length > 0) {
+                                const source = overOutputs[0] as FunctionBuilderArt;
 
-                            plugin.artVersionSystem.unregisterVirtualArts(arrow);
-                        },
-                    });
-                    return;
-                }
-
-                // Editing old connection
-                const overInputs = plugin.artVersionSystem.artsPlaced.filter(
-                    (art) =>
-                        art instanceof FunctionBuilderArt &&
-                        Object.values((art as FunctionBuilderArt).__mouseOverInput).reduce(
-                            (prev, curr) => prev || curr,
-                            false,
-                        ),
-                );
-
-                if (overInputs.length > 0) {
-                    const oldChild = overInputs[0] as FunctionBuilderArt;
-                    const inputId = Object.keys(oldChild.__mouseOverInput).filter(
-                        (key) => oldChild.__mouseOverInput[key],
-                    )[0]; // Must exist because filtering
-
-                    // Nothing connected there
-                    if (!oldChild.connections[inputId]) return;
-
-                    const possibleSources = plugin.artVersionSystem.artsPlaced.filter(
-                        (art) => art.artId === oldChild.connections[inputId],
-                    );
-
-                    // Source no longer exists
-                    if (possibleSources.length === 0) return;
-
-                    oldChild.connections[inputId] = null;
-                    GraphStateHolder.update();
-
-                    const source = possibleSources[0];
-
-                    const arrow = new FunctionBuilderConnectionArt(
-                        source.getOutputPosition((this.plugin as any) as SystemsContainer),
-                        source.color,
-                    );
-
-                    plugin.artVersionSystem.registerVirtualArts(arrow);
-                    touch.frames.subscribe({
-                        next: (touchFrame) => {
-                            arrow.end = this.plugin.collSpace.pickPoint(touchFrame.position).point;
-                            plugin.artVersionSystem.updateVirtualArts(arrow);
-                        },
-                        complete: () => {
-                            plugin.artVersionSystem.artsPlaced.forEach(
-                                (art) =>
-                                    art instanceof FunctionBuilderArt &&
-                                    (art as FunctionBuilderArt).registerInputIfOver(source.artId),
-                            );
-
-                            plugin.artVersionSystem.unregisterVirtualArts(arrow);
-                        },
-                    });
-                    return;
-                }
-
-                // Dragging whole boxes (supply selection tool)
-                // TODO: Make some reusable code from movetool not to implement dragging in every spetial tool
-                let dragging: FunctionBuilderArt;
-
-                const draggable = this.plugin.artVersionSystem.materialArtsPlaced.filter(
-                    (art) =>
-                        art.isNear(this.plugin.collSpace.pickPoint(touch.firstFrame.position).point) &&
-                        art instanceof FunctionBuilderArt &&
-                        !art.locked,
-                ) as FunctionBuilderArt[];
-                if (!draggable.length) {
-                    this.plugin.appState.selected = [];
-                    return;
-                }
-
-                dragging = draggable[draggable.length - 1];
-                this.plugin.appState.selected = [dragging];
-
-                const operation = this.plugin.createOperation('Dragging').takeArts(dragging);
-
-                let lastPosition = this.plugin.collSpace.pickPoint(touch.firstFrame.position).point;
-
-                this.registerAdditionalSubscription(
-                    touch.frames.subscribe(
-                        (frame) => {
-                            // TODO: If not move just select
-
-                            operation.updateWithCallback((art) => {
-                                art.move(
-                                    this.plugin.collSpace
-                                        .pickPoint(frame.positionRelative)
-                                        .point.subtract(lastPosition),
+                                const arrow = new FunctionBuilderConnectionArt(
+                                    source.getOutputPosition(systemsContainer),
+                                    source.color,
                                 );
 
-                                lastPosition = this.plugin.collSpace.pickPoint(frame.position).point;
-                                return art;
-                            });
-                        },
-                        () => {},
-                        () => {
+                                const arrowAsVirtualArt = virtualArtVersioningSystem
+                                    .createPrimaryOperation()
+                                    .newArts(arrow);
+
+                                touch.frames.subscribe({
+                                    next: (touchFrame) => {
+                                        arrow.end = collSpace.pickPoint(touchFrame.position).point;
+                                        arrowAsVirtualArt.update(arrow);
+                                    },
+                                    complete: () => {
+                                        const toUpdate = materialArtVersioningSystem.artsPlaced.filter(
+                                            (art) => art instanceof FunctionBuilderArt,
+                                        );
+
+                                        materialArtVersioningSystem
+                                            .createOperation('Connection updated')
+                                            .takeArts(...toUpdate)
+                                            .updateWithMutatingCallback((art) =>
+                                                (art as FunctionBuilderArt).registerInputIfOver(
+                                                    source.artId,
+                                                    touch.frames.value.position,
+                                                ),
+                                            )
+                                            .persist();
+
+                                        arrowAsVirtualArt.destroy();
+                                    },
+                                });
+                                return;
+                            }
+
+                            // Editing old connection
+                            const overInputs = materialArtVersioningSystem.artsPlaced.filter(
+                                (art) =>
+                                    art instanceof FunctionBuilderArt &&
+                                    Object.values((art as FunctionBuilderArt).__pointerOverInput).reduce(
+                                        (prev, curr) => prev || curr,
+                                        false,
+                                    ),
+                            );
+
+                            if (overInputs.length > 0) {
+                                const oldChild = overInputs[0] as FunctionBuilderArt;
+                                const inputId = Object.keys(oldChild.__pointerOverInput).filter(
+                                    (key) => oldChild.__pointerOverInput[key],
+                                )[0]; // Must exist because filtering
+
+                                // Nothing connected there
+                                if (!oldChild.connections[inputId]) return;
+
+                                const possibleSources = materialArtVersioningSystem.artsPlaced.filter(
+                                    (art) => art.artId === oldChild.connections[inputId],
+                                );
+
+                                // Source no longer exists
+                                if (possibleSources.length === 0) return;
+
+                                oldChild.connections[inputId] = null;
+                                GraphStateHolder.update();
+
+                                const source = possibleSources[0];
+
+                                const arrow = new FunctionBuilderConnectionArt(
+                                    source.getOutputPosition(systemsContainer),
+                                    source.color,
+                                );
+
+                                const arrowAsVirtualArt = virtualArtVersioningSystem
+                                    .createPrimaryOperation()
+                                    .newArts(arrow);
+                                touch.frames.subscribe({
+                                    next: (touchFrame) => {
+                                        arrow.end = collSpace.pickPoint(touchFrame.position).point;
+                                        arrowAsVirtualArt.update(arrow);
+                                    },
+                                    complete: () => {
+                                        const toUpdate = materialArtVersioningSystem.artsPlaced.filter(
+                                            (art) => art instanceof FunctionBuilderArt,
+                                        );
+
+                                        materialArtVersioningSystem
+                                            .createOperation('Connection deleted')
+                                            .takeArts(...toUpdate)
+                                            .updateWithMutatingCallback((art) =>
+                                                (art as FunctionBuilderArt).registerInputIfOver(
+                                                    source.artId,
+                                                    touch.frames.value.position,
+                                                ),
+                                            )
+                                            .persist();
+
+                                        arrowAsVirtualArt.destroy();
+                                    },
+                                });
+                                return;
+                            }
+
+                            // Dragging whole boxes (supply selection tool)
+                            //selectionToolBehavior({ registerAdditionalSubscription, systems: systemsContainer, touch });
+                            selectionToolDraggingBehavior({
+                                registerAdditionalSubscription,
+                                systems: systemsContainer,
+                                touch,
+                            }) ||
+                                selectionToolSelectionBoxBehavior({
+                                    registerAdditionalSubscription,
+                                    systems: systemsContainer,
+                                    touch,
+                                });
+                            return;
+                        } else {
+                            const pointOnBoard = collSpace.pickPoint(touch.firstFrame.position).point;
+
+                            const newArt = new FunctionBuilderArt(
+                                pointOnBoard.subtract(new Vector(115, 140)),
+                                state.selectedFunction,
+                            );
+
+                            const operation = materialArtVersioningSystem.createPrimaryOperation();
+                            operation.newArts(newArt);
                             operation.persist();
-                        },
-                    ),
+
+                            activateSelectionTool();
+                        }
+                    }),
                 );
-                return;
-            } else {
-                const pointOnBoard = this.plugin.collSpace.pickPoint(touch.firstFrame.position).point;
-
-                const newArt = new FunctionBuilderArt(
-                    pointOnBoard.subtract(new Vector(115, 140)),
-                    plugin.selectedFunction,
-                );
-
-                const operation = this.plugin.createOperation('FunctionBuilderNew');
-                operation.newArts(newArt);
-                operation.persist();
-
-                plugin.activateSelectionTool();
-            }
-        });
-    }
-}
+            },
+        },
+    });
+});

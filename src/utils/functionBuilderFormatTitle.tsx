@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { FunctionBuilderFunction } from '../interfaces/FunctionBuilderFunction';
+import { FunctionBuilderDefinition, isFunctionBuilderFunction } from '../interfaces/FunctionBuilderFunction';
 
-export function functionBuilderFormatTitle(definition: FunctionBuilderFunction): JSX.Element {
+export function functionBuilderFormatTitle(definition: FunctionBuilderDefinition): JSX.Element {
     const raw = definition.title;
+
+    if (!isFunctionBuilderFunction(definition)) {
+        return <span>{raw}</span>;
+    }
+
     const varsIds = Object.keys(definition.variables);
 
     let result = raw;

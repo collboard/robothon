@@ -1,5 +1,5 @@
+import { Abstract2dArt } from '@collboard/modules-sdk';
 import { IVector, Vector } from 'xyzt';
-import { Abstract2dArt } from '../../../71-arts/26-Abstract2dArt';
 import { renderPath } from './renderPath';
 
 export class FunctionBuilderConnectionArt extends Abstract2dArt {

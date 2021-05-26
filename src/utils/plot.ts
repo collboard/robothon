@@ -1,3 +1,5 @@
+/* tslint:disable */
+/* TODO: Enable TSLint */
 import { IPlotOptions } from '../interfaces/IPlotOptions';
 
 const SCALE = 10;
@@ -30,8 +32,6 @@ export function plot({ canvas, func, boundingBox, objects }: IPlotOptions) {
     // Function plot
     ctx.beginPath();
     ctx.strokeStyle = '#4E4E4E';
-
-    let last = 0;
 
     for (let x = 0; x <= canvas.width; x += 1) {
         const result = func((x - centerX) / SCALE);

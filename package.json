@@ -1,12 +1,13 @@
 {
     "name": "robothon",
     "version": "1.0.0",
-    "description": "Projekt vytvořený na Robothonu 2021jako první externí modul do Collboardu.",
+    "description": "Project started at Robothon 2021 as a first external module for Collboard.com",
     "contributors": [
         "Pavol Hejný <me@pavolhejny.com> (https://pavolhejny.com)",
-        "Jonáš Rosecký <jonas.rosecky@h-edu.cz>"
+        "Jonáš Rosecký <jonas.rosecky@h-edu.cz> (https://xrosecky.cz)"
     ],
     "homepage": "https://github.com/collboard/robothon#readme",
+    "main": "./src/index.ts",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/collboard/robothon.git"
@@ -15,15 +16,14 @@
         "url": "https://github.com/collboard/robothon/issues"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "colldev ",
+        "publish": "colldev publish"
     },
     "dependencies": {
-        "@collboard/modules-sdk": "^9.1.0-5",
-        "mobx": "^6.0.4",
-        "react": "^17.0.1",
-        "xyzt": "4.4.2"
+        "@collboard/modules-sdk": " 11.2.2-1",
+        "styled-components": "^5.3.0"
     },
     "devDependencies": {
-        "@types/react": "^17.0.0"
+        "@types/styled-components": "^5.1.9"
     }
 }

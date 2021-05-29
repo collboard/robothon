@@ -20,7 +20,7 @@
         "publish": "colldev publish"
     },
     "dependencies": {
-        "@collboard/modules-sdk": "^11.2.2-1",
+        "@collboard/modules-sdk": "^11.3.0-5",
         "mobx": "^5.15.6",
         "styled-components": "^5.3.0"
     },

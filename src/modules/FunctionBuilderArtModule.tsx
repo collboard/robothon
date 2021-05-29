@@ -451,4 +451,4 @@ export class FunctionBuilderArt extends Abstract2dArt {
     }
 }
 
-declareModule(makeArtModule({ name: 'FunctionBuilder', class: FunctionBuilderArt }));
+declareModule(makeArtModule({ name: 'SampleFunctionBuilder', class: FunctionBuilderArt }));

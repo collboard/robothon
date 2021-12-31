@@ -1,3 +1,5 @@
+# `This project was made on hackathon. Expect a pure code quality, outdated dependencies and lot of unfinished work`
+
 # Collboard graph plotting module
 Project started at Robothon 2021 as a **first external module** for [Collboard.com](https://collboard.com/)
 
